@@ -3,14 +3,12 @@ import time
 import datetime
 import traceback
 
-# import pyautogui
+import pyautogui
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 
 class new_suzuki_scraping:
     def __init__(self, start_hour, end_hour, sleep_time):
-        self.driver = self.set_driver()
-        
         self.start_hour = start_hour
         self.end_hour = end_hour
         self.sleep_time = sleep_time
@@ -29,29 +27,32 @@ class new_suzuki_scraping:
         self.driver.quit()        
         self.driver = None
 
-    # 特定の画像をクリック
+    # 特定の画像を探す
     def is_exist_img(self, img_path):
         for i in range(10):
             if pyautogui.locateOnScreen(img_path) is not None:
                 return True
             time.sleep(1)
         
-        raise False
+        return False
 
     # ログイン
     def login(self, username, password):
         pyautogui.hotkey('win', 'd')
         time.sleep(self.sleep_time)
 
-        self.driver.get("https://stn.suzuki.co.jp/sios/menu/SLMA_Menu.jsp")
+        self.driver = self.set_driver()
         time.sleep(self.sleep_time)
 
-        if self.is_exist_img(__file__.replace("serch.py", "image/dialog_img.png")):
-            pyautogui.press("\t")
-            pyautogui.press("\t")
-            pyautogui.press("\n")
-        else:
-            raise Exception("ログイン画面が開けませんでした")
+        self.driver.get("https://stn.suzuki.co.jp/sios/menu/SLMA_Menu.jsp")
+        time.sleep(self.sleep_time*2)
+
+        # if self.is_exist_img(__file__.replace("search.py", "image/dialog_img.png")):
+        #     pyautogui.press("\t")
+        #     pyautogui.press("\t")
+        #     pyautogui.press("\n")
+        # else:
+        #     raise Exception("ログイン画面が開けませんでした")
         time.sleep(self.sleep_time)
 
         username_field = self.driver.find_element(By.XPATH, "//input[@type='text']")
@@ -95,7 +96,7 @@ class new_suzuki_scraping:
     # 車種詳細情報ページを開く
     def open_detail_car_page(self):
         self.driver.find_element(By.ID, "btn_detail").click()
-        self.driver.time_sleep(self.sleep_time)
+        time.sleep(self.sleep_time)
 
         detail_iframe = self.driver.find_element(By.XPATH, "//iframe[@id='epc_floating_window_content_1']")
         self.driver.switch_to.frame(detail_iframe)
@@ -108,9 +109,9 @@ class new_suzuki_scraping:
         time.sleep(self.sleep_time)
 
     # 車種詳細情報で型式指定番号・類別区分番号を入力
-    def input_model_classification_num(self, model_num, classification_num):
+    def input_model_classification_num(self, car_model_designation_no, classification_num):
         car_model_field = self.driver.find_element(By.ID, "katashikiNo")
-        car_model_field.send_keys(model_num)
+        car_model_field.send_keys(car_model_designation_no)
         time.sleep(0.5)
         classification_num_field = self.driver.find_element(By.ID, "rubetKubun")
         classification_num_field.send_keys(classification_num)
@@ -120,6 +121,9 @@ class new_suzuki_scraping:
         confirm_btn = self.driver.find_element(By.XPATH, "//input[@id='decisioner']")
         confirm_btn.click()
         time.sleep(self.sleep_time)
+
+        self.driver.switch_to.parent_frame()
+        time.sleep(self.sleep_time)
     
     # 車種詳細情報で車種情報クリアボタンをクリック
     def click_clear_btn(self):
@@ -127,9 +131,12 @@ class new_suzuki_scraping:
         clear_btn.click()
         time.sleep(self.sleep_time)
 
+        self.driver.switch_to.parent_frame()
+        time.sleep(self.sleep_time)
+
     # 車種詳細情報の情報を取得
     def get_car_data_list(self):
-        car_data_list = []
+        car_data_list = {}
         tables = self.driver.find_elements(By.TAG_NAME, "table")
         
         # 基本情報テーブルと追加情報テーブルをそれぞれ定義
@@ -177,6 +184,149 @@ class new_suzuki_scraping:
         time.sleep(self.sleep_time)
 
         self.driver.switch_to.parent_frame()
+        time.sleep(self.sleep_time)
+    
+    # 収録車種一覧ページの情報を取得
+    def get_car_data_list(self):
+        car_data_list = {"車名": [], "型式": [], "様式": [], "始号機": [], "終号機": [], "開始年月": [], "終了年月": [], "カタログ機種": []}
+
+        table = self.driver.find_element(By.ID, "div004Items")
+        for row in table.find_elements(By.TAG_NAME, "tblRow"):
+            cells = row.find_elements(By.TAG_NAME, "td")
+            car_data_list["車名"].append(cells[0].text)
+            car_data_list["型式"].append(cells[1].text)
+            car_data_list["様式"].append(cells[2].text)
+            car_data_list["始号機"].append(cells[3].text)
+            car_data_list["終号機"].append(cells[4].text)
+            car_data_list["開始年月"].append(cells[5].text)
+            car_data_list["終了年月"].append(cells[6].text)
+            car_data_list["カタログ機種"].append(cells[7].text)
+        
+        return car_data_list
+
+    # 収録車種一覧ページの特定の車種をクリック
+    def click_car_list_row(self, target_row_num):
+        table = self.driver.find_element(By.ID, "div004Items")
+        row = table.find_elements(By.TAG_NAME, "tblRow")[target_row_num]
+        row.click()
+        time.sleep(self.sleep_time)
+    
+    # 収録車種一覧ページの次へをクリック
+    def click_car_list_next_btn(self):
+        next_btn = self.driver.find_element(By.CLASS_NAME, "cmButton5")
+        next_btn.click()
+        time.sleep(self.sleep_time)
+
+    # 補助番号選択ページの情報を取得
+    def get_auxiliary_num_list(self):
+        table = self.driver.find_element(By.TAG_NAME, "table")
+
+        # 補助番号選択のテーブルのヘッダー情報を取得
+        trs = table.find_elements(By.TAG_NAME, "tr")
+        headers = [td.get_attribute("value") for td in trs[0].find_elements(By.TAG_NAME, "td")[1:] if td.get_attribute("value") != ""]
+        headers = ["補助記号"] + headers
+        
+        # 補助番号選択のテーブルのデータ情報を取得
+        auxiliary_num_list = {key: [] for key in headers}
+        for tr in trs[1:]:
+            for idx, header in enumerate(headers):
+                auxiliary_num_list[header].append(tr.find_elements(By.TAG_NAME, "td")[idx].get_attribute("value"))
+
+        return auxiliary_num_list
+
+    # 補助番号選択ページの特定の補助番号をクリック
+    def click_auxiliary_num_list_row(self, target_row_num):
+        table = self.driver.find_element(By.TAG_NAME, "table")
+        row = table.find_elements(By.TAG_NAME, "tr")[target_row_num]
+        row.click()
+        time.sleep(self.sleep_time)
+    
+    # 補助番号選択ページの次へをクリック
+    def click_auxiliary_num_list_next_btn(self):
+        next_btn = self.driver.find_element(By.ID, "nexter")
+        next_btn.click()
+        time.sleep(self.sleep_time)
+
+        if self.change_handle("SUZUKI_SIOS010 メイン"):
+            return True
+        else:
+            return False
+    
+    # 補助番号選択ページの選択しないをクリック
+    def click_auxiliary_num_list_no_select_btn(self):
+        no_select_btn = self.driver.find_element(By.ID, "notSelecter")
+        no_select_btn.click()
+        time.sleep(self.sleep_time)
+
+        if self.change_handle("SUZUKI_SIOS010 メイン"):
+            return True
+        else:
+            return False
+        
+    # 部品番号を入力
+    def input_parts_num(self, parts_code_list):
+        parts_num_form = self.driver.find_element(By.XPATH, '//*[@id="inPartNo"]')
+        parts_num_form.send_keys(" ".join(parts_code_list))
+        time.sleep(self.sleep_time)
+    
+    # 部品検索を行う
+    def search_parts(self):
+        self.driver.execute_script("addParts()")
+        time.sleep(self.sleep_time)
+    
+    # 部品検索結果を取得
+    def get_result_parts_list(self):
+        table = self.driver.find_element(By.ID, "tblSios010")
+        trs = table.find_elements(By.CLASS_NAME, "TitleCellA")
+        result_dic = {"品番":[], "統一先品番":[], "FIGNo":[], "FIGSai":[], "Ref":[], "品名":[], "希望小売価格":[], "互換":[], "採用年式":[], "廃止年式":[], "適合スペック":[], "特記事項":[], "規格":[], "切替コード":[], "様式":[], "始号機":[], "終号機":[]}
+        keys = {"partNo":"品番", "generalPtsNo":"統一先品番", "figNo":"FIGNo", "figSai":"FIGSai", "refNo":"Ref", "partNm":"品名", "price":"希望小売価格", "compatiCd":"互換"}
+        tokki_keys = {"saiyoYm":"採用年式", "haishiYm":"廃止年式", "tekiyouSpec":"適合スペック", "tokki":"特記事項", "kikakuSunpo":"規格", "kirikaeCd":"切替コード", "vintypeCd":"様式", "vinnoSta":"始号機", "vinnoEnd":"終号機"}
+
+        for tr in trs:
+            for key in keys.keys():
+                obj = tr.find_element(By.ID, key)
+                if key in ["partNo", "partNm"]:
+                    result_dic[keys[key]].append(obj.get_attribute("value"))
+                elif key in ["generalPtsNo", "figNo", "figSai", "refNo", "price", "compatiCd"]:
+                    result_dic[keys[key]].append(obj.text)
+
+            # 特記事項を開いてデータを取得
+            if len(tr.find_elements(By.ID, "tokkiIcon"))>0:
+                tr.find_element(By.ID, "tokkiIcon").click()
+                time.sleep(1)
+
+                self.change_handle(self.driver, "SUZUKI_SIOS040　部品特記")
+                
+                time.sleep(1)
+                for tokki_key in tokki_keys:
+                    if tokki_key in ["kirikaeCd", "vintypeCd", "vinnoSta", "vinnoEnd"]:
+                        if len(self.driver.find_elements(By.ID, tokki_key))>0:
+                            elements = self.driver.find_elements(By.ID, tokki_key)
+                            result_dic[tokki_keys[tokki_key]].append([element.text for element in elements])
+                        else:
+                            result_dic[tokki_keys[tokki_key]].append([])
+                    elif tokki_key in ["tokki"]:
+                        result_dic[tokki_keys[tokki_key]].append(self.driver.find_elements(By.ID, tokki_key)[-1].text)
+                    else:
+                        result_dic[tokki_keys[tokki_key]].append(self.driver.find_element(By.ID, tokki_key).text)
+                self.driver.find_element(By.CLASS_NAME, "cmButton5").click()     
+                time.sleep(1)
+                self.change_handle(self.driver, "SUZUKI_SIOS010 メイン")
+            else:
+                for tokki_key in tokki_keys:
+                    if tokki_key in ["kirikaeCd", "vintypeCd", "vinnoSta", "vinnoEnd"]:
+                        result_dic[tokki_keys[tokki_key]].append([])
+                    else:
+                        result_dic[tokki_keys[tokki_key]].append("")
+        
+        return result_dic
+
+    # 部品結果をクリア
+    def click_result_clear_btn(self):
+        self.driver.find_element(By.ID, "btn_all_delete").click()
+        time.sleep(self.sleep_time)
+        self.driver.switch_to.alert.accept()
+
 
     # エラーメッセージを取得
     def get_error_message(self):
@@ -228,16 +378,18 @@ class new_suzuki_scraping:
             return False
 
     # 車種情報ページまで遷移
-    def scraping_setup(self):
+    def scraping_setup(self, username, password):
         if not self.is_in_time():
             raise Exception("Webサイトの開いている時間外です")
         
-        self.login()
+        self.login(username, password)
         self.move_parts_order_page()
         self.move_car_info_page()
+        self.open_detail_car_page()
+        self.click_clear_btn()
 
     # 車体番号を検索する
-    def chassis_num_serch(self, model, chassis_num, add_char, tokusou=False):
+    def chassis_num_serch(self, model, chassis_num, add_char="", tokusou=False):
         if not self.is_in_time():
             raise Exception("Webサイトの開いている時間外です")
         try:
@@ -245,14 +397,16 @@ class new_suzuki_scraping:
                 self.open_detail_car_page()
                 self.input_chassis_num(model, chassis_num)
                 self.click_confirm_btn()
-
+            
+            self.open_detail_car_page()
             car_data_list = self.get_car_data_list()
             self.click_clear_btn()
-            self.close_detail_car_page()
 
             return True, car_data_list
         except Exception as e:
             error_message = self.get_error_message()
+            print(error_message)
+            input()
 
             for errorCount in range(10):
                 # アラート画面を消す
@@ -263,6 +417,9 @@ class new_suzuki_scraping:
                 
                 # 特装車に関するアラートは消したのち情報を取得する
                 if "特装車" in error_message:
+                    self.driver.switch_to.parent_frame()
+                    time.sleep(self.sleep_time)
+                    
                     flg, car_data_list = self.chassis_num_serch(model, chassis_num, add_char, tokusou=True)
                     return flg, car_data_list
 
@@ -279,3 +436,75 @@ class new_suzuki_scraping:
                 return "Error", {"様式":model, "番号":chassis_num}
             
             return False, {"様式":model, "番号":chassis_num}
+
+    # 類型で検索する
+    def typology_search(self, car_model_designation_no, classification_no, tokusou=False, target_car_list_row_num=0, target_auxiliary_num_list_row_num=0):
+        if not self.is_in_time():
+            raise Exception("Webサイトの開いている時間外です")
+        try:
+            if not tokusou:
+                self.open_detail_car_page()
+                self.input_model_classification_num(car_model_designation_no, classification_no)
+                self.click_confirm_btn()
+            
+            car_data_list = {}
+            if self.is_exist_page("SUZUKI_SIOS004 収録車種一覧（２）"):
+                self.change_handle("SUZUKI_SIOS004 収録車種一覧（２）")
+                if target_car_list_row_num == 0 and target_auxiliary_num_list_row_num == 0:
+                    car_data_list = self.get_car_data_list()
+                
+                self.click_car_list_row(target_car_list_row_num)
+                self.click_car_list_next_btn()
+            
+            auxiliary_num_list = {}
+            if self.is_exist_page("SUZUKI_SIOS005 型式類別車種選択"):
+                self.change_handle("SUZUKI_SIOS005 型式類別車種選択")
+                if target_auxiliary_num_list_row_num == 0:
+                    auxiliary_num_list = self.get_auxiliary_num_list()
+                
+                self.click_auxiliary_num_list_row(target_auxiliary_num_list_row_num)
+                self.click_auxiliary_num_list_next_btn()
+
+            return True, car_data_list, auxiliary_num_list
+        except Exception as e:
+            error_message = self.get_error_message()
+            print(error_message)
+            input()
+
+            for errorCount in range(10):
+                # アラート画面を消す
+                try:
+                    self.close_alert()
+                except:
+                    pass
+                
+                # 特装車に関するアラートは消したのち情報を取得する
+                if "特装車" in error_message:
+                    self.driver.switch_to.parent_frame()
+                    time.sleep(self.sleep_time)
+                    
+                    flg, car_data_list, auxiliary_num_list = self.typology_search(car_model_designation_no, classification_no, tokusou=True, target_car_list_row_num=target_car_list_row_num, target_auxiliary_num_list_row_num=target_auxiliary_num_list_row_num)
+                    return flg, car_data_list, auxiliary_num_list
+
+                # 車種詳細情報を閉じる
+                try:
+                    self.close_detail_car_page()
+                    break
+                except:
+                    time.sleep(self.sleep_time)
+            else:
+                # driverを強制終了させる
+                self.release_driver()
+
+                return "Error", {"型式指定番号":car_model_designation_no, "類別区分番号":classification_no}
+            
+            return False, {"型式指定番号":car_model_designation_no, "類別区分番号":classification_no}
+
+    # 部品番号を検索する
+    def search_parts(self, parts_code_list):
+        self.input_parts_num(parts_code_list)
+        self.search_parts()
+        result_parts_list = self.get_result_parts_list()
+
+        return result_parts_list
+
