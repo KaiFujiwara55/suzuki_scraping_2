@@ -500,11 +500,96 @@ class new_suzuki_scraping:
             
             return False, {"型式指定番号":car_model_designation_no, "類別区分番号":classification_no}
 
+    def pinpoint_typology_search(self, car_model_designation_no, classification_no, car_name,car_model_name, youshiki, vin_start, vin_end, model_from, model_to, catalog_name, tokusou=False):
+        if not self.is_in_time():
+            raise Exception("Webサイトの開いている時間外です")
+        try:
+            if not tokusou:
+                self.open_detail_car_page()
+                self.input_model_classification_num(car_model_designation_no, classification_no)
+                self.click_confirm_btn()
+            
+            if self.is_exist_page("SUZUKI_SIOS004 収録車種一覧（２）"):
+                self.change_handle("SUZUKI_SIOS004 収録車種一覧（２）")
+
+                car_data_list = self.get_car_data_list()
+                for idx, car_data in enumerate(car_data_list):
+                    if car_data["車名"] == car_name and car_data["型式"] == car_model_name and car_data["様式"] == youshiki and car_data["始号機"] == vin_start and car_data["終号機"] == vin_end and car_data["開始年月"] == model_from and car_data["終了年月"] == model_to and car_data["カタログ機種"] == catalog_name:
+                        break
+                else:
+                    return False
+                self.click_car_list_row(idx)
+                self.click_car_list_next_btn()
+            else:
+                self.change_handle("SUZUKI_SIOS010 メイン")
+            
+            if self.is_exist_page("SUZUKI_SIOS005 型式類別車種選択"):
+                self.change_handle("SUZUKI_SIOS005 型式類別車種選択")
+                self.click_auxiliary_num_list_no_select_btn()
+            else:
+                self.change_handle("SUZUKI_SIOS010 メイン")
+
+            return True
+        except Exception as e:
+            error_message = self.get_error_message()
+            print(error_message)
+            input()
+
+            for errorCount in range(10):
+                # アラート画面を消す
+                try:
+                    self.close_alert()
+                except:
+                    pass
+                
+                # 特装車に関するアラートは消したのち情報を取得する
+                if "特装車" in error_message:
+                    self.driver.switch_to.parent_frame()
+                    time.sleep(self.sleep_time)
+                    
+                    flg = self.pinpoint_typology_search(car_model_designation_no, classification_no, car_name, car_model_name, youshiki, vin_start, vin_end, model_from, model_to, catalog_name, tokusou=True)
+                    return flg
+
+                # 車種詳細情報を閉じる
+                try:
+                    self.close_detail_car_page()
+                    break
+                except:
+                    time.sleep(self.sleep_time)
+            else:
+                # driverを強制終了させる
+                self.release_driver()
+
+                return "Error"
+            
+            return False
+
     # 部品番号を検索する
     def search_parts(self, parts_code_list):
-        self.input_parts_num(parts_code_list)
-        self.search_parts()
-        result_parts_list = self.get_result_parts_list()
+        try:
+            self.input_parts_num(parts_code_list)
+            self.search_parts()
+            result_parts_list = self.get_result_parts_list()
+            
+            return result_parts_list
+        except:
+            error_message = self.get_error_message()
+            for errorCount in range(10):
+                # アラート画面を消す
+                try:
+                    self.close_alert()
+                except:
+                    pass
+                
+                # 特装車に関するアラートは消したのち情報を取得する
+                if "100件" in error_message:
+                    self.driver.switch_to.parent_frame()
+                    time.sleep(self.sleep_time)
+                    
+                    return "over"
+            else:
+                # driverを強制終了させる
+                self.release_driver()
 
-        return result_parts_list
+                return "Error"
 
