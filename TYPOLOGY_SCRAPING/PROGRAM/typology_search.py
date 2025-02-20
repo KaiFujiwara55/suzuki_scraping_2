@@ -47,5 +47,8 @@ for idx, target_row in target_df.iterrows():
     )
     
     result_parts_list = new_suzuki_scraping.search_parts(parts_code, read_tokki=False)
+    new_suzuki_scraping.open_detail_car_page()
+    new_suzuki_scraping.click_clear_btn()
+    
     result_df = pd.DataFrame.from_dict(result_parts_list)
     print(result_df)
