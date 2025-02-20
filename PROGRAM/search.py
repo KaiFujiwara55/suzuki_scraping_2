@@ -207,7 +207,7 @@ class new_suzuki_scraping:
     # 収録車種一覧ページの特定の車種をクリック
     def click_car_list_row(self, target_row_num):
         table = self.driver.find_element(By.ID, "div004Items")
-        row = table.find_elements(By.TAG_NAME, "tblRow")[target_row_num]
+        row = table.find_elements(By.ID, "tblRow")[target_row_num]
         row.click()
         time.sleep(self.sleep_time)
     
@@ -534,6 +534,7 @@ class new_suzuki_scraping:
             return True
         except Exception as e:
             error_message = self.get_error_message()
+            print(error_message)
 
             for errorCount in range(10):
                 # アラート画面を消す
@@ -584,7 +585,7 @@ class new_suzuki_scraping:
                     pass
                 
                 # 特装車に関するアラートは消したのち情報を取得する
-                if "100件" in error_message:
+                if "１００件" in error_message:
                     self.driver.switch_to.parent_frame()
                     time.sleep(self.sleep_time)
                     

@@ -30,7 +30,7 @@ else:
 
 for idx, target_row in target_df.iterrows():
     is_scraping = target_row["is_scraping"]
-    if is_scraping == "True" or is_scraping == "Over":
+    if is_scraping == "True" or is_scraping == "over":
         continue
 
     car_model_designation_no = target_row["car_model_designation_no"]
@@ -72,5 +72,8 @@ for idx, target_row in target_df.iterrows():
         target_df.loc[idx, "is_scraping"] = "True"
         target_df.to_csv(os.environ.get("TARGET_DATA_PATH"), index=False)
     else:
+        new_suzuki_scraping.open_detail_car_page()
+        new_suzuki_scraping.click_clear_btn()
+
         target_df.loc[idx, "is_scraping"] = "Over"
         target_df.to_csv(os.environ.get("TARGET_DATA_PATH"), index=False)
