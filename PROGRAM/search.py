@@ -278,7 +278,10 @@ class new_suzuki_scraping:
     def get_result_parts_list(self, read_tokki=True):
         table = self.driver.find_element(By.ID, "tblSios010")
         trs = table.find_elements(By.CLASS_NAME, "TitleCellA")
-        result_dic = {"品番":[], "統一先品番":[], "FIGNo":[], "FIGSai":[], "Ref":[], "品名":[], "希望小売価格":[], "互換":[], "採用年式":[], "廃止年式":[], "適合スペック":[], "特記事項":[], "規格":[], "切替コード":[], "様式":[], "始号機":[], "終号機":[]}
+        if read_tokki:
+            result_dic = {"品番":[], "統一先品番":[], "FIGNo":[], "FIGSai":[], "Ref":[], "品名":[], "希望小売価格":[], "互換":[], "採用年式":[], "廃止年式":[], "適合スペック":[], "特記事項":[], "規格":[], "切替コード":[], "様式":[], "始号機":[], "終号機":[]}
+        else:
+            result_dic = {"品番":[], "統一先品番":[], "FIGNo":[], "FIGSai":[], "Ref":[], "品名":[], "希望小売価格":[], "互換":[]}
         keys = {"partNo":"品番", "generalPtsNo":"統一先品番", "figNo":"FIGNo", "figSai":"FIGSai", "refNo":"Ref", "partNm":"品名", "price":"希望小売価格", "compatiCd":"互換"}
         tokki_keys = {"saiyoYm":"採用年式", "haishiYm":"廃止年式", "tekiyouSpec":"適合スペック", "tokki":"特記事項", "kikakuSunpo":"規格", "kirikaeCd":"切替コード", "vintypeCd":"様式", "vinnoSta":"始号機", "vinnoEnd":"終号機"}
 
