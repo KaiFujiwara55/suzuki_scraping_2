@@ -515,8 +515,8 @@ class new_suzuki_scraping:
                 print(car_data_list)
     
                 for i in range(len(car_data_list.values)):
-                    print(car_data["車名"] == car_name and car_data["型式"] == car_model_name and car_data["様式"] == youshiki and car_data["始号機"] == vin_start and car_data["終号機"] == vin_end and car_data["開始年月"] == model_from and car_data["終了年月"] == model_to and car_data["カタログ機種"] == catalog_name)
-                    if car_data["車名"] == car_name and car_data["型式"] == car_model_name and car_data["様式"] == youshiki and car_data["始号機"] == vin_start and car_data["終号機"] == vin_end and car_data["開始年月"] == model_from and car_data["終了年月"] == model_to and car_data["カタログ機種"] == catalog_name:
+                    print(car_data_list["車名"][i] == car_name and car_data_list["型式"][i] == car_model_name and car_data_list["様式"][i] == youshiki and car_data_list["始号機"][i] == vin_start and car_data_list["終号機"][i] == vin_end and car_data_list["開始年月"][i] == model_from and car_data_list["終了年月"][i] == model_to and car_data_list["カタログ機種"][i] == catalog_name)
+                    if (car_data_list["車名"][i] == car_name and car_data_list["型式"][i] == car_model_name and car_data_list["様式"][i] == youshiki and car_data_list["始号機"][i] == vin_start and car_data_list["終号機"][i] == vin_end and car_data_list["開始年月"][i] == model_from and car_data_list["終了年月"][i] == model_to and car_data_list["カタログ機種"][i] == catalog_name):
                         break
                 else:
                     return False
