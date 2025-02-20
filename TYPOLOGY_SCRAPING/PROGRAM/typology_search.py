@@ -16,9 +16,15 @@ def split_parts_code(parts_code, split_num):
     
     return tmp_list_2
 
+def no_data_handling(str):
+    if str == "no_data":
+        return ""
+    else:
+        return str
+
 sys.path.append(os.environ.get("SCRAPING_PROGRAM_PATH"))
 import search
-new_suzuki_scraping = search.new_suzuki_scraping(start_hour=9, end_hour=18, sleep_time=2)
+new_suzuki_scraping = search.new_suzuki_scraping(start_hour=9, end_hour=21, sleep_time=2)
 new_suzuki_scraping.scraping_setup(username="EBW0063768I", password="57110T5GN60")
 
 target_df = pd.read_csv(os.environ.get("TARGET_DATA_PATH"), dtype=str)
@@ -30,20 +36,20 @@ else:
 
 for idx, target_row in target_df.iterrows():
     is_scraping = target_row["is_scraping"]
-    if is_scraping == "True" or is_scraping == "over":
+    if is_scraping == "True" or is_scraping == "Over":
         continue
 
-    car_model_designation_no = target_row["car_model_designation_no"]
-    classification_no = target_row["classification_no"]
-    car_name = target_row["car_name"]
-    car_model_name = target_row["car_model_name"]
-    youshiki = target_row["youshiki"]
-    vin_start = target_row["vin_start"]
-    vin_end = target_row["vin_end"]
-    model_from = target_row["model_from"]
-    model_to = target_row["model_to"]
-    catalog_name = target_row["catalog_name"]
-    parts_code = target_row["parts_code"]
+    car_model_designation_no = no_data_handling(target_row["car_model_designation_no"])
+    classification_no = no_data_handling(target_row["classification_no"])
+    car_name = no_data_handling(target_row["car_name"])
+    car_model_name = no_data_handling(target_row["car_model_name"])
+    youshiki = no_data_handling(target_row["youshiki"])
+    vin_start = no_data_handling(target_row["vin_start"])
+    vin_end = no_data_handling(target_row["vin_end"])
+    model_from = no_data_handling(target_row["model_from"])
+    model_to = no_data_handling(target_row["model_to"])
+    catalog_name = no_data_handling(target_row["catalog_name"])
+    parts_code = no_data_handling(target_row["parts_code"])
 
     is_success = new_suzuki_scraping.pinpoint_typology_search(
         car_model_designation_no=car_model_designation_no,

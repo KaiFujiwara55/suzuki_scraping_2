@@ -330,6 +330,7 @@ class new_suzuki_scraping:
         self.driver.find_element(By.ID, "btn_all_delete").click()
         time.sleep(self.sleep_time)
         self.driver.switch_to.alert.accept()
+        time.sleep(self.sleep_time)
 
     # エラーメッセージを取得
     def get_error_message(self):
