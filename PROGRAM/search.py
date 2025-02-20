@@ -270,7 +270,7 @@ class new_suzuki_scraping:
         time.sleep(self.sleep_time)
     
     # 部品検索を行う
-    def search_parts(self):
+    def execute_add_parts(self):
         self.driver.execute_script("addParts()")
         time.sleep(self.sleep_time)
     
@@ -568,8 +568,9 @@ class new_suzuki_scraping:
     def search_parts(self, parts_code_list):
         try:
             self.input_parts_num(parts_code_list)
-            self.search_parts()
+            self.execute_add_parts()
             result_parts_list = self.get_result_parts_list()
+            
             
             return result_parts_list
         except:

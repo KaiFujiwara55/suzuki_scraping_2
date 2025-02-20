@@ -2,7 +2,7 @@ import os
 import sys
 import pandas as pd
 from dotenv import load_dotenv
-load_dotenv(__file__.replace("chassis_search.py", ".env"))
+load_dotenv(__file__.replace("typology_search.py", ".env"))
 
 sys.path.append(os.environ.get("SCRAPING_PROGRAM_PATH"))
 import search
