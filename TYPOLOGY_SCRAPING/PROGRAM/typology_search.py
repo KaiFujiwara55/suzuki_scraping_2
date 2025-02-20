@@ -45,7 +45,6 @@ for idx, target_row in target_df.iterrows():
         model_to=model_to,
         catalog_name=catalog_name
     )
-        
-    new_suzuki_scraping.pinpoint_typology_search_parts(car_model_designation_no, classification_no, car_name, car_model_name, youshiki, vin_start, vin_end, model_from, model_to, catalog_name)
+    
     result_parts_list = new_suzuki_scraping.search_parts(parts_code)
     print(result_parts_list)

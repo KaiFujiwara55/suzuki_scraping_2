@@ -264,9 +264,9 @@ class new_suzuki_scraping:
             return False
         
     # 部品番号を入力
-    def input_parts_num(self, parts_code_list):
+    def input_parts_num(self, parts_code):
         parts_num_form = self.driver.find_element(By.XPATH, '//*[@id="inPartNo"]')
-        parts_num_form.send_keys(" ".join(parts_code_list))
+        parts_num_form.send_keys(parts_code)
         time.sleep(self.sleep_time)
     
     # 部品検索を行う
@@ -295,7 +295,7 @@ class new_suzuki_scraping:
                 tr.find_element(By.ID, "tokkiIcon").click()
                 time.sleep(1)
 
-                self.change_handle(self.driver, "SUZUKI_SIOS040　部品特記")
+                self.change_handle("SUZUKI_SIOS040　部品特記")
                 
                 time.sleep(1)
                 for tokki_key in tokki_keys:
@@ -311,7 +311,7 @@ class new_suzuki_scraping:
                         result_dic[tokki_keys[tokki_key]].append(self.driver.find_element(By.ID, tokki_key).text)
                 self.driver.find_element(By.CLASS_NAME, "cmButton5").click()     
                 time.sleep(1)
-                self.change_handle(self.driver, "SUZUKI_SIOS010 メイン")
+                self.change_handle("SUZUKI_SIOS010 メイン")
             else:
                 for tokki_key in tokki_keys:
                     if tokki_key in ["kirikaeCd", "vintypeCd", "vinnoSta", "vinnoEnd"]:
@@ -404,8 +404,6 @@ class new_suzuki_scraping:
             return True, car_data_list
         except Exception as e:
             error_message = self.get_error_message()
-            print(error_message)
-            input()
 
             for errorCount in range(10):
                 # アラート画面を消す
@@ -467,8 +465,6 @@ class new_suzuki_scraping:
             return True, car_data_list, auxiliary_num_list
         except Exception as e:
             error_message = self.get_error_message()
-            print(error_message)
-            input()
 
             for errorCount in range(10):
                 # アラート画面を消す
@@ -531,8 +527,6 @@ class new_suzuki_scraping:
             return True
         except Exception as e:
             error_message = self.get_error_message()
-            print(error_message)
-            input()
 
             for errorCount in range(10):
                 # アラート画面を消す
@@ -574,6 +568,7 @@ class new_suzuki_scraping:
             return result_parts_list
         except:
             error_message = self.get_error_message()
+            print(error_message)
             for errorCount in range(10):
                 # アラート画面を消す
                 try:
