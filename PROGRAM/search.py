@@ -512,6 +512,7 @@ class new_suzuki_scraping:
                 self.change_handle("SUZUKI_SIOS004 収録車種一覧（２）")
 
                 car_data_list = self.get_car_data_list()
+                print(car_data_list)
                 for idx, car_data in enumerate(car_data_list):
                     print(car_data["車名"] == car_name and car_data["型式"] == car_model_name and car_data["様式"] == youshiki and car_data["始号機"] == vin_start and car_data["終号機"] == vin_end and car_data["開始年月"] == model_from and car_data["終了年月"] == model_to and car_data["カタログ機種"] == catalog_name)
                     if car_data["車名"] == car_name and car_data["型式"] == car_model_name and car_data["様式"] == youshiki and car_data["始号機"] == vin_start and car_data["終号機"] == vin_end and car_data["開始年月"] == model_from and car_data["終了年月"] == model_to and car_data["カタログ機種"] == catalog_name:
