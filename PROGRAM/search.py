@@ -191,7 +191,7 @@ class new_suzuki_scraping:
         car_data_list = {"車名": [], "型式": [], "様式": [], "始号機": [], "終号機": [], "開始年月": [], "終了年月": [], "カタログ機種": []}
 
         table = self.driver.find_element(By.ID, "div004Items")
-        for row in table.find_elements(By.TAG_NAME, "tblRow"):
+        for row in table.find_elements(By.ID, "tblRow"):
             cells = row.find_elements(By.TAG_NAME, "td")
             car_data_list["車名"].append(cells[0].text)
             car_data_list["型式"].append(cells[1].text)
@@ -513,7 +513,8 @@ class new_suzuki_scraping:
 
                 car_data_list = self.get_record_car_data_list()
                 print(car_data_list)
-                for idx, car_data in enumerate(car_data_list):
+    
+                for i in range(len(car_data_list.values)):
                     print(car_data["車名"] == car_name and car_data["型式"] == car_model_name and car_data["様式"] == youshiki and car_data["始号機"] == vin_start and car_data["終号機"] == vin_end and car_data["開始年月"] == model_from and car_data["終了年月"] == model_to and car_data["カタログ機種"] == catalog_name)
                     if car_data["車名"] == car_name and car_data["型式"] == car_model_name and car_data["様式"] == youshiki and car_data["始号機"] == vin_start and car_data["終号機"] == vin_end and car_data["開始年月"] == model_from and car_data["終了年月"] == model_to and car_data["カタログ機種"] == catalog_name:
                         break
