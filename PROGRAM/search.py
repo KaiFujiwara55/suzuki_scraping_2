@@ -187,7 +187,7 @@ class new_suzuki_scraping:
         time.sleep(self.sleep_time)
     
     # 収録車種一覧ページの情報を取得
-    def get_car_data_list(self):
+    def get_record_car_data_list(self):
         car_data_list = {"車名": [], "型式": [], "様式": [], "始号機": [], "終号機": [], "開始年月": [], "終了年月": [], "カタログ機種": []}
 
         table = self.driver.find_element(By.ID, "div004Items")
@@ -511,7 +511,7 @@ class new_suzuki_scraping:
             if self.is_exist_page("SUZUKI_SIOS004 収録車種一覧（２）"):
                 self.change_handle("SUZUKI_SIOS004 収録車種一覧（２）")
 
-                car_data_list = self.get_car_data_list()
+                car_data_list = self.get_record_car_data_list()
                 print(car_data_list)
                 for idx, car_data in enumerate(car_data_list):
                     print(car_data["車名"] == car_name and car_data["型式"] == car_model_name and car_data["様式"] == youshiki and car_data["始号機"] == vin_start and car_data["終号機"] == vin_end and car_data["開始年月"] == model_from and car_data["終了年月"] == model_to and car_data["カタログ機種"] == catalog_name)
