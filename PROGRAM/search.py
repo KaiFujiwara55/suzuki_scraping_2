@@ -327,7 +327,6 @@ class new_suzuki_scraping:
         time.sleep(self.sleep_time)
         self.driver.switch_to.alert.accept()
 
-
     # エラーメッセージを取得
     def get_error_message(self):
         etype, value, tb = sys.exc_info()
@@ -570,7 +569,7 @@ class new_suzuki_scraping:
             self.input_parts_num(parts_code_list)
             self.execute_add_parts()
             result_parts_list = self.get_result_parts_list()
-            
+            self.click_result_clear_btn()
             
             return result_parts_list
         except:
