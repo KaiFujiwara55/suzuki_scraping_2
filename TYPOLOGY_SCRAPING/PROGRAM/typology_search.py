@@ -4,6 +4,18 @@ import pandas as pd
 from dotenv import load_dotenv
 load_dotenv(__file__.replace("typology_search.py", ".env"))
 
+def split_parts_code(parts_code, split_num):
+    tmp_list = parts_code.split(" ")
+
+    tmp_list_2 = []
+    for i in range(split_num):
+        if i < split_num-1:
+            tmp_list_2.append(" ".join(tmp_list[int(len(tmp_list)/split_num)*i:int(len(tmp_list)/split_num)*(i+1)]))
+        else:
+            tmp_list_2.append(" ".join(tmp_list[int(len(tmp_list)/split_num)*i:]))
+    
+    return tmp_list_2
+
 sys.path.append(os.environ.get("SCRAPING_PROGRAM_PATH"))
 import search
 new_suzuki_scraping = search.new_suzuki_scraping(start_hour=9, end_hour=18, sleep_time=2)
@@ -46,7 +58,9 @@ for idx, target_row in target_df.iterrows():
         catalog_name=catalog_name
     )
     
+    # ヒットが100件以上の場合はparts_codeを修正する
     result_parts_list = new_suzuki_scraping.search_parts(parts_code, read_tokki=False)
+    
     new_suzuki_scraping.open_detail_car_page()
     new_suzuki_scraping.click_clear_btn()
 
