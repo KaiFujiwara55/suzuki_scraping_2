@@ -49,10 +49,11 @@ for idx, target_row in target_df.iterrows():
     result_parts_list = new_suzuki_scraping.search_parts(parts_code, read_tokki=False)
     new_suzuki_scraping.open_detail_car_page()
     new_suzuki_scraping.click_clear_btn()
-    
+
     tmp_df = pd.DataFrame.from_dict(result_parts_list)
     
     output_df = pd.concat([output_df, tmp_df], axis=0)
     output_df.to_csv(os.environ.get("OUTPUT_DATA_PATH"), index=False)
 
     target_df.loc[idx, "is_scraping"] = "True"
+    target_df.to_csv(os.environ.get("TARGET_DATA_PATH"), index=False)
