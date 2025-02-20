@@ -46,5 +46,6 @@ for idx, target_row in target_df.iterrows():
         catalog_name=catalog_name
     )
     
-    result_parts_list = new_suzuki_scraping.search_parts(parts_code)
-    print(result_parts_list)
+    result_parts_list = new_suzuki_scraping.search_parts(parts_code, read_tokki=False)
+    result_df = pd.DataFrame.from_dict(result_parts_list)
+    print(result_df)

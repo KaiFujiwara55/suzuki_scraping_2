@@ -275,7 +275,7 @@ class new_suzuki_scraping:
         time.sleep(self.sleep_time)
     
     # 部品検索結果を取得
-    def get_result_parts_list(self):
+    def get_result_parts_list(self, read_tokki=True):
         table = self.driver.find_element(By.ID, "tblSios010")
         trs = table.find_elements(By.CLASS_NAME, "TitleCellA")
         result_dic = {"品番":[], "統一先品番":[], "FIGNo":[], "FIGSai":[], "Ref":[], "品名":[], "希望小売価格":[], "互換":[], "採用年式":[], "廃止年式":[], "適合スペック":[], "特記事項":[], "規格":[], "切替コード":[], "様式":[], "始号機":[], "終号機":[]}
@@ -290,34 +290,35 @@ class new_suzuki_scraping:
                 elif key in ["generalPtsNo", "figNo", "figSai", "refNo", "price", "compatiCd"]:
                     result_dic[keys[key]].append(obj.text)
 
-            # 特記事項を開いてデータを取得
-            if len(tr.find_elements(By.ID, "tokkiIcon"))>0:
-                tr.find_element(By.ID, "tokkiIcon").click()
-                time.sleep(1)
+            if read_tokki:
+                # 特記事項を開いてデータを取得
+                if len(tr.find_elements(By.ID, "tokkiIcon"))>0:
+                    tr.find_element(By.ID, "tokkiIcon").click()
+                    time.sleep(1)
 
-                self.change_handle("SUZUKI_SIOS040　部品特記")
-                
-                time.sleep(1)
-                for tokki_key in tokki_keys:
-                    if tokki_key in ["kirikaeCd", "vintypeCd", "vinnoSta", "vinnoEnd"]:
-                        if len(self.driver.find_elements(By.ID, tokki_key))>0:
-                            elements = self.driver.find_elements(By.ID, tokki_key)
-                            result_dic[tokki_keys[tokki_key]].append([element.text for element in elements])
+                    self.change_handle("SUZUKI_SIOS040　部品特記")
+                    
+                    time.sleep(1)
+                    for tokki_key in tokki_keys:
+                        if tokki_key in ["kirikaeCd", "vintypeCd", "vinnoSta", "vinnoEnd"]:
+                            if len(self.driver.find_elements(By.ID, tokki_key))>0:
+                                elements = self.driver.find_elements(By.ID, tokki_key)
+                                result_dic[tokki_keys[tokki_key]].append([element.text for element in elements])
+                            else:
+                                result_dic[tokki_keys[tokki_key]].append([])
+                        elif tokki_key in ["tokki"]:
+                            result_dic[tokki_keys[tokki_key]].append(self.driver.find_elements(By.ID, tokki_key)[-1].text)
                         else:
+                            result_dic[tokki_keys[tokki_key]].append(self.driver.find_element(By.ID, tokki_key).text)
+                    self.driver.find_element(By.CLASS_NAME, "cmButton5").click()     
+                    time.sleep(1)
+                    self.change_handle("SUZUKI_SIOS010 メイン")
+                else:
+                    for tokki_key in tokki_keys:
+                        if tokki_key in ["kirikaeCd", "vintypeCd", "vinnoSta", "vinnoEnd"]:
                             result_dic[tokki_keys[tokki_key]].append([])
-                    elif tokki_key in ["tokki"]:
-                        result_dic[tokki_keys[tokki_key]].append(self.driver.find_elements(By.ID, tokki_key)[-1].text)
-                    else:
-                        result_dic[tokki_keys[tokki_key]].append(self.driver.find_element(By.ID, tokki_key).text)
-                self.driver.find_element(By.CLASS_NAME, "cmButton5").click()     
-                time.sleep(1)
-                self.change_handle("SUZUKI_SIOS010 メイン")
-            else:
-                for tokki_key in tokki_keys:
-                    if tokki_key in ["kirikaeCd", "vintypeCd", "vinnoSta", "vinnoEnd"]:
-                        result_dic[tokki_keys[tokki_key]].append([])
-                    else:
-                        result_dic[tokki_keys[tokki_key]].append("")
+                        else:
+                            result_dic[tokki_keys[tokki_key]].append("")
         
         return result_dic
 
@@ -558,11 +559,11 @@ class new_suzuki_scraping:
             return False
 
     # 部品番号を検索する
-    def search_parts(self, parts_code_list):
+    def search_parts(self, parts_code_list, read_tokki=True):
         try:
             self.input_parts_num(parts_code_list)
             self.execute_add_parts()
-            result_parts_list = self.get_result_parts_list()
+            result_parts_list = self.get_result_parts_list(read_tokki)
             self.click_result_clear_btn()
             
             return result_parts_list
