@@ -57,7 +57,7 @@ while True:
             model_from = no_data_handling(target_row["model_from"])
             model_to = no_data_handling(target_row["model_to"])
             catalog_name = no_data_handling(target_row["catalog_name"])
-            parts_code = no_data_handling(target_row["parts_code"])
+            parts_code = no_data_handling(" ".join(list(set(target_row["parts_code"].split(" ")))))
 
             new_suzuki_scraping.pinpoint_typology_search(
                 car_model_designation_no=car_model_designation_no,
