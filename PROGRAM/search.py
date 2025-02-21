@@ -40,12 +40,10 @@ class new_suzuki_scraping:
     
     # ログイン画面に遷移
     async def execute_login_url(self):
-        print("execute_login_url")
         await asyncio.to_thread(self.driver.get, "https://stn.suzuki.co.jp/sios/menu/SLMA_Menu.jsp")
 
     # 認証突破
     async def pass_auth_window(self):
-        print("pass_auth_window")
         if self.is_exist_img(__file__.replace("search.py", "image/dialog_img.png")):
             pyautogui.press("\t")
             pyautogui.press("\t")
