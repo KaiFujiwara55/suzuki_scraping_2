@@ -2,6 +2,7 @@ import sys
 import time
 import datetime
 import traceback
+import asyncio
 
 import pyautogui
 from selenium import webdriver
@@ -30,11 +31,30 @@ class new_suzuki_scraping:
     # 特定の画像を探す
     def is_exist_img(self, img_path):
         for i in range(10):
+            print(i)
             if pyautogui.locateOnScreen(img_path) is not None:
                 return True
             time.sleep(1)
         
         return False
+    
+    # ログイン画面に遷移
+    async def execute_login_url(self):
+        print("execute_login_url")
+        await asyncio.to_thread(self.driver.get, "https://stn.suzuki.co.jp/sios/menu/SLMA_Menu.jsp")
+
+    # 認証突破
+    async def pass_auth_window(self):
+        print("pass_auth_window")
+        if self.is_exist_img(__file__.replace("search.py", "image/dialog_img.png")):
+            pyautogui.press("\t")
+            pyautogui.press("\t")
+            pyautogui.press("\n")
+        else:
+            raise Exception("ログイン画面が開けませんでした")
+    
+    async def get_login_page(self):
+        await asyncio.gather(self.execute_login_url(), self.pass_auth_window())
 
     # ログイン
     def login(self, username, password):
@@ -44,15 +64,8 @@ class new_suzuki_scraping:
         self.driver = self.set_driver()
         time.sleep(self.sleep_time)
 
-        self.driver.get("https://stn.suzuki.co.jp/sios/menu/SLMA_Menu.jsp")
-        time.sleep(self.sleep_time*2)
-
-        # if self.is_exist_img(__file__.replace("search.py", "image/dialog_img.png")):
-        #     pyautogui.press("\t")
-        #     pyautogui.press("\t")
-        #     pyautogui.press("\n")
-        # else:
-        #     raise Exception("ログイン画面が開けませんでした")
+        asyncio.run(self.get_login_page())
+        
         time.sleep(self.sleep_time)
 
         username_field = self.driver.find_element(By.XPATH, "//input[@type='text']")
