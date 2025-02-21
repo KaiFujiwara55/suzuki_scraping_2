@@ -579,17 +579,15 @@ class new_suzuki_scraping:
                 time.sleep(self.sleep_time)
 
                 # parts_code_listを分割して再度検索
-                split_count = 2
-                while True:
-                    parts_code_list_list = self.split_parts_code(parts_code_list, split_count)
+                parts_code_list_list = self.split_parts_code(parts_code_list, split_count=2)
 
-                    result_parts_list_list = []
-                    for parts_code_list in parts_code_list_list:
-                        print(parts_code_list)
-                        result_parts_list = self.search_parts(parts_code_list, read_tokki)
-                        result_parts_list_list.append(result_parts_list)
-                    else:
-                        return self.concat_dict(result_parts_list_list)
+                result_parts_list_list = []
+                for parts_code_list in parts_code_list_list:
+                    print(parts_code_list)
+                    result_parts_list = self.search_parts(parts_code_list, read_tokki)
+                    result_parts_list_list.append(result_parts_list)
+                else:
+                    return self.concat_dict(result_parts_list_list)
             else:
                 raise e
 
