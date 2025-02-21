@@ -341,8 +341,8 @@ class new_suzuki_scraping:
         self.driver.find_element(By.ID, "btn_all_delete").click()
         time.sleep(self.sleep_time)
 
-        if "全て部品を削除します" in self.get_alert_message():
-            self.driver.switch_to.alert.accept()
+        if "全て削除" in self.get_alert_message():
+            self.close_alert()
             time.sleep(self.sleep_time)
         else:
             raise Exception("Unknown Aleart Message")
@@ -356,10 +356,9 @@ class new_suzuki_scraping:
 
     # アラートメッセージを取得
     def get_alert_message(self):
+        print("start")
         alert = self.driver.switch_to.alert
         alert_message = alert.text
-
-        self.driver.switch_to.parent_frame()
 
         return alert_message
 
@@ -589,6 +588,7 @@ class new_suzuki_scraping:
             if "１００件" in error_message:
                 self.driver.switch_to.parent_frame()
                 time.sleep(self.sleep_time)
+                return "over"
 
                 # parts_code_listを分割して再度検索
                 split_count = 2

@@ -92,7 +92,7 @@ while True:
                 target_df.loc[idx, "is_scraping"] = "Over"
                 target_df.to_csv(os.environ.get("TARGET_DATA_PATH"), index=False)
     except Exception as e:
-        print(e.__traceback__)
+        print(e)
     except KeyboardInterrupt:
         break
     except search.TimeOverError:
