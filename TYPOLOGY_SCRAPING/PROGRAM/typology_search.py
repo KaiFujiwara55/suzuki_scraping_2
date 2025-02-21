@@ -44,7 +44,7 @@ while True:
 
         for idx, target_row in target_df.iterrows():
             is_scraping = target_row["is_scraping"]
-            if is_scraping == "True" or is_scraping == "Over":
+            if is_scraping == "True":
                 continue
 
             car_model_designation_no = no_data_handling(target_row["car_model_designation_no"])

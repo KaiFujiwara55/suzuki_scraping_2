@@ -356,7 +356,6 @@ class new_suzuki_scraping:
 
     # アラートメッセージを取得
     def get_alert_message(self):
-        print("start")
         alert = self.driver.switch_to.alert
         alert_message = alert.text
 
@@ -588,17 +587,18 @@ class new_suzuki_scraping:
             if "１００件" in error_message:
                 self.driver.switch_to.parent_frame()
                 time.sleep(self.sleep_time)
-                return "over"
 
                 # parts_code_listを分割して再度検索
                 split_count = 2
                 while True:
+                    print(split_count)
                     parts_code_list_list = self.split_parts_code(parts_code_list, split_count)
 
                     result_parts_list_list = []
                     for parts_code_list in parts_code_list_list:
                         result_parts_list = self.search_parts(parts_code_list, read_tokki)
                         if result_parts_list == "over":
+                            print("over")
                             split_count += 1
                             break
                         result_parts_list_list.append(result_parts_list)
