@@ -38,7 +38,7 @@ class new_suzuki_scraping:
         
         return False
     
-    # ログイン画面に遷移
+    # ログイン画面に遷移するURLを叩く
     async def execute_login_url(self):
         await asyncio.to_thread(self.driver.get, "https://stn.suzuki.co.jp/sios/menu/SLMA_Menu.jsp")
 
@@ -51,10 +51,12 @@ class new_suzuki_scraping:
         else:
             raise Exception("ログイン画面が開けませんでした")
     
+    # ログイン画面に遷移
     async def get_login_page(self):
+        # ログイン画面に遷移するURLを叩くと認証画面が出てしまい、getメソッドが終了しなくなるため別スレッドで実行させてパスする
         await asyncio.gather(self.execute_login_url(), self.pass_auth_window())
 
-    # ログイン
+    # ログイン処理
     def login(self, username, password):
         pyautogui.hotkey('win', 'd')
         time.sleep(self.sleep_time)
@@ -63,7 +65,6 @@ class new_suzuki_scraping:
         time.sleep(self.sleep_time)
 
         asyncio.run(self.get_login_page())
-        
         time.sleep(self.sleep_time)
 
         username_field = self.driver.find_element(By.XPATH, "//input[@type='text']")
@@ -340,6 +341,7 @@ class new_suzuki_scraping:
     def click_result_clear_btn(self):
         self.driver.find_element(By.ID, "btn_all_delete").click()
         time.sleep(self.sleep_time)
+
         self.driver.switch_to.alert.accept()
         time.sleep(self.sleep_time)
 
@@ -361,41 +363,22 @@ class new_suzuki_scraping:
 
         for current_handle in current_handles:
             self.driver.switch_to.window(current_handle)
-            time.sleep(self.sleep_time)
+            time.sleep(0.2)
 
             if self.driver.title == title:
                 return True
         
         return False
 
-    # 指定したページがあるかどうかを確認
-    def is_exist_page(self, title):
-        current_handles = self.driver.window_handles
-        current_handles.reverse()
-
-        for current_handle in current_handles:
-            self.driver.switch_to.window(current_handle)
-            time.sleep(self.sleep_time)
-
-            if self.driver.title == title:
-                return True
-            else:
-                continue
-        else:
-            return False
-
     # Webサイトの開いている時間内かを調べる
     def is_in_time(self):
         now = datetime.datetime.now()
-        if self.start_hour <= now.hour and now.hour < self.end_hour:
-            return True
-        else:
-            return False
+        if not (self.start_hour <= now.hour and now.hour < self.end_hour):
+            raise TimeOverError()
 
     # 車種情報ページまで遷移
     def scraping_setup(self, username, password):
-        if not self.is_in_time():
-            raise Exception("Webサイトの開いている時間外です")
+        self.is_in_time()
         
         self.login(username, password)
         self.move_parts_order_page()
@@ -405,8 +388,9 @@ class new_suzuki_scraping:
 
     # 車体番号を検索する
     def chassis_num_serch(self, model, chassis_num, add_char="", tokusou=False):
-        if not self.is_in_time():
-            raise Exception("Webサイトの開いている時間外です")
+        self.is_in_time()
+
+        # alertを管理するためのtry-except文
         try:
             if not tokusou:
                 self.open_detail_car_page()
@@ -417,11 +401,11 @@ class new_suzuki_scraping:
             car_data_list = self.get_car_data_list()
             self.click_clear_btn()
 
-            return True, car_data_list
+            return car_data_list
         except Exception as e:
             error_message = self.get_error_message()
 
-            for errorCount in range(10):
+            for _ in range(10):
                 # アラート画面を消す
                 try:
                     self.close_alert()
@@ -433,8 +417,8 @@ class new_suzuki_scraping:
                     self.driver.switch_to.parent_frame()
                     time.sleep(self.sleep_time)
                     
-                    flg, car_data_list = self.chassis_num_serch(model, chassis_num, add_char, tokusou=True)
-                    return flg, car_data_list
+                    car_data_list = self.chassis_num_serch(model, chassis_num, add_char, tokusou=True)
+                    return car_data_list
 
                 # 車種詳細情報を閉じる
                 try:
@@ -446,14 +430,14 @@ class new_suzuki_scraping:
                 # driverを強制終了させる
                 self.release_driver()
 
-                return "Error", {"様式":model, "番号":chassis_num}
+                return {"様式":model, "番号":chassis_num}
             
-            return False, {"様式":model, "番号":chassis_num}
+            return {"様式":model, "番号":chassis_num}
 
     # 類型で検索する
     def typology_search(self, car_model_designation_no, classification_no, tokusou=False, target_car_list_row_num=0, target_auxiliary_num_list_row_num=0):
-        if not self.is_in_time():
-            raise Exception("Webサイトの開いている時間外です")
+        self.is_in_time()
+
         try:
             if not tokusou:
                 self.open_detail_car_page()
@@ -461,8 +445,7 @@ class new_suzuki_scraping:
                 self.click_confirm_btn()
             
             car_data_list = {}
-            if self.is_exist_page("SUZUKI_SIOS004 収録車種一覧（２）"):
-                self.change_handle("SUZUKI_SIOS004 収録車種一覧（２）")
+            if self.change_handle("SUZUKI_SIOS004 収録車種一覧（２）"):
                 if target_car_list_row_num == 0 and target_auxiliary_num_list_row_num == 0:
                     car_data_list = self.get_car_data_list()
                 
@@ -470,19 +453,18 @@ class new_suzuki_scraping:
                 self.click_car_list_next_btn()
             
             auxiliary_num_list = {}
-            if self.is_exist_page("SUZUKI_SIOS005 型式類別車種選択"):
-                self.change_handle("SUZUKI_SIOS005 型式類別車種選択")
+            if self.change_handle("SUZUKI_SIOS005 型式類別車種選択"):
                 if target_auxiliary_num_list_row_num == 0:
                     auxiliary_num_list = self.get_auxiliary_num_list()
                 
                 self.click_auxiliary_num_list_row(target_auxiliary_num_list_row_num)
                 self.click_auxiliary_num_list_next_btn()
 
-            return True, car_data_list, auxiliary_num_list
+            return car_data_list, auxiliary_num_list
         except Exception as e:
             error_message = self.get_error_message()
 
-            for errorCount in range(10):
+            for _ in range(10):
                 # アラート画面を消す
                 try:
                     self.close_alert()
@@ -494,8 +476,8 @@ class new_suzuki_scraping:
                     self.driver.switch_to.parent_frame()
                     time.sleep(self.sleep_time)
                     
-                    flg, car_data_list, auxiliary_num_list = self.typology_search(car_model_designation_no, classification_no, tokusou=True, target_car_list_row_num=target_car_list_row_num, target_auxiliary_num_list_row_num=target_auxiliary_num_list_row_num)
-                    return flg, car_data_list, auxiliary_num_list
+                    car_data_list, auxiliary_num_list = self.typology_search(car_model_designation_no, classification_no, tokusou=True, target_car_list_row_num=target_car_list_row_num, target_auxiliary_num_list_row_num=target_auxiliary_num_list_row_num)
+                    return car_data_list, auxiliary_num_list
 
                 # 車種詳細情報を閉じる
                 try:
@@ -507,75 +489,51 @@ class new_suzuki_scraping:
                 # driverを強制終了させる
                 self.release_driver()
 
-                return "Error", {"型式指定番号":car_model_designation_no, "類別区分番号":classification_no}
+                return {"型式指定番号":car_model_designation_no, "類別区分番号":classification_no}
             
-            return False, {"型式指定番号":car_model_designation_no, "類別区分番号":classification_no}
+            return {"型式指定番号":car_model_designation_no, "類別区分番号":classification_no}
 
     def pinpoint_typology_search(self, car_model_designation_no, classification_no, car_name,car_model_name, youshiki, vin_start, vin_end, model_from, model_to, catalog_name, tokusou=False):
-        if not self.is_in_time():
-            raise Exception("Webサイトの開いている時間外です")
+        self.is_in_time()
+
         try:
             if not tokusou:
                 self.open_detail_car_page()
                 self.input_model_classification_num(car_model_designation_no, classification_no)
                 self.click_confirm_btn()
             
-            if self.is_exist_page("SUZUKI_SIOS004 収録車種一覧（２）"):
-                self.change_handle("SUZUKI_SIOS004 収録車種一覧（２）")
-
+            if self.change_handle("SUZUKI_SIOS004 収録車種一覧（２）"):
                 car_data_list = self.get_record_car_data_list()
-                print(car_data_list)
-    
                 for idx in range(len(car_data_list.values())):
-                    print(car_data_list["車名"][idx] == car_name and car_data_list["型式"][idx] == car_model_name and car_data_list["様式"][idx] == youshiki and car_data_list["始号機"][idx] == vin_start and car_data_list["終号機"][idx] == vin_end and car_data_list["開始年月"][idx] == model_from and car_data_list["終了年月"][idx] == model_to and car_data_list["カタログ機種"][idx] == catalog_name)
                     if (car_data_list["車名"][idx] == car_name and car_data_list["型式"][idx] == car_model_name and car_data_list["様式"][idx] == youshiki and car_data_list["始号機"][idx] == vin_start and car_data_list["終号機"][idx] == vin_end and car_data_list["開始年月"][idx] == model_from and car_data_list["終了年月"][idx] == model_to and car_data_list["カタログ機種"][idx] == catalog_name):
+                        self.click_car_list_row(idx)
+                        self.click_car_list_next_btn()
                         break
                 else:
-                    return False
-                self.click_car_list_row(idx)
-                self.click_car_list_next_btn()
-            else:
-                self.change_handle("SUZUKI_SIOS010 メイン")
-            
-            if self.is_exist_page("SUZUKI_SIOS005 型式類別車種選択"):
-                self.change_handle("SUZUKI_SIOS005 型式類別車種選択")
+                    raise Exception("該当する車種が見つかりませんでした")
+
+            if self.change_handle("SUZUKI_SIOS005 型式類別車種選択"):
                 self.click_auxiliary_num_list_no_select_btn()
             else:
                 self.change_handle("SUZUKI_SIOS010 メイン")
-
-            return True
         except Exception as e:
             error_message = self.get_error_message()
             print(error_message)
 
-            for errorCount in range(10):
-                # アラート画面を消す
-                try:
-                    self.close_alert()
-                except:
-                    pass
-                
-                # 特装車に関するアラートは消したのち情報を取得する
-                if "特装車" in error_message:
-                    self.driver.switch_to.parent_frame()
-                    time.sleep(self.sleep_time)
-                    
-                    flg = self.pinpoint_typology_search(car_model_designation_no, classification_no, car_name, car_model_name, youshiki, vin_start, vin_end, model_from, model_to, catalog_name, tokusou=True)
-                    return flg
-
-                # 車種詳細情報を閉じる
-                try:
-                    self.close_detail_car_page()
-                    break
-                except:
-                    time.sleep(self.sleep_time)
-            else:
-                # driverを強制終了させる
-                self.release_driver()
-
-                return "Error"
+            # アラート画面を消す
+            try:
+                self.close_alert()
+            except:
+                pass
             
-            return False
+            # 特装車に関するアラートは消したのち情報を取得する
+            if "特装車" in error_message:
+                self.driver.switch_to.parent_frame()
+                time.sleep(self.sleep_time)
+                
+                self.pinpoint_typology_search(car_model_designation_no, classification_no, car_name, car_model_name, youshiki, vin_start, vin_end, model_from, model_to, catalog_name, tokusou=True)
+            else:
+                raise e
 
     # 部品番号を検索する
     def search_parts(self, parts_code_list, read_tokki=True):
@@ -586,25 +544,22 @@ class new_suzuki_scraping:
             self.click_result_clear_btn()
             
             return result_parts_list
-        except:
+        except Exception as e:
             error_message = self.get_error_message()
             print(error_message)
-            for errorCount in range(10):
-                # アラート画面を消す
-                try:
-                    self.close_alert()
-                except:
-                    pass
-                
-                # 特装車に関するアラートは消したのち情報を取得する
-                if "１００件" in error_message:
-                    self.driver.switch_to.parent_frame()
-                    time.sleep(self.sleep_time)
-                    
-                    return "over"
+            # アラート画面を消す
+            try:
+                self.close_alert()
+            except:
+                pass
+            
+            # 特装車に関するアラートは消したのち情報を取得する
+            if "１００件" in error_message:
+                self.driver.switch_to.parent_frame()
+
+                return "over"
             else:
-                # driverを強制終了させる
-                self.release_driver()
+                raise e
 
-                return "Error"
-
+class TimeOverError():
+    pass
