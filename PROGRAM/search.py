@@ -31,7 +31,6 @@ class new_suzuki_scraping:
     # 特定の画像を探す
     def is_exist_img(self, img_path):
         for i in range(10):
-            print(i)
             if pyautogui.locateOnScreen(img_path) is not None:
                 return True
             time.sleep(1)
@@ -342,8 +341,11 @@ class new_suzuki_scraping:
         self.driver.find_element(By.ID, "btn_all_delete").click()
         time.sleep(self.sleep_time)
 
-        self.driver.switch_to.alert.accept()
-        time.sleep(self.sleep_time)
+        if "全て部品を削除します" in self.get_alert_message():
+            self.driver.switch_to.alert.accept()
+            time.sleep(self.sleep_time)
+        else:
+            raise Exception("Unknown Aleart Message")
 
     # エラーメッセージを取得
     def get_error_message(self):
@@ -351,6 +353,15 @@ class new_suzuki_scraping:
         error_message = "".join(traceback.format_exception(etype, value, tb))
 
         return error_message
+
+    # アラートメッセージを取得
+    def get_alert_message(self):
+        alert = self.driver.switch_to.alert
+        alert_message = alert.text
+
+        self.driver.switch_to.parent_frame()
+
+        return alert_message
 
     # アラートを消す
     def close_alert(self):
@@ -493,6 +504,7 @@ class new_suzuki_scraping:
             
             return {"型式指定番号":car_model_designation_no, "類別区分番号":classification_no}
 
+    # 特定の車種を指定して検索する
     def pinpoint_typology_search(self, car_model_designation_no, classification_no, car_name,car_model_name, youshiki, vin_start, vin_end, model_from, model_to, catalog_name, tokusou=False):
         self.is_in_time()
 
@@ -518,7 +530,6 @@ class new_suzuki_scraping:
                 self.change_handle("SUZUKI_SIOS010 メイン")
         except Exception as e:
             error_message = self.get_error_message()
-            print(error_message)
 
             # アラート画面を消す
             try:
@@ -535,6 +546,28 @@ class new_suzuki_scraping:
             else:
                 raise e
 
+    # 部品番号を修正する
+    def split_parts_code(self, parts_code, split_count):
+        parts_code_list = parts_code.split(" ")
+        step_count = len(parts_code_list)//split_count
+        
+        new_parts_code_list = []
+        for i in range(split_count):
+            if i == split_count-1:
+                new_parts_code_list.append(" ".join(parts_code_list[step_count*i:]))
+            else:
+                new_parts_code_list.append(" ".join(parts_code_list[step_count*i:step_count*(i+1)]))
+        
+        return new_parts_code_list
+    
+    # 同一keyを持つ辞書を結合する
+    def concat_dict(self, dict_list):
+        result_dict = {}
+        for key in dict_list[0].keys():
+            result_dict[key] = []
+
+        return result_dict
+
     # 部品番号を検索する
     def search_parts(self, parts_code_list, read_tokki=True):
         try:
@@ -546,7 +579,6 @@ class new_suzuki_scraping:
             return result_parts_list
         except Exception as e:
             error_message = self.get_error_message()
-            print(error_message)
             # アラート画面を消す
             try:
                 self.close_alert()
@@ -556,10 +588,29 @@ class new_suzuki_scraping:
             # 特装車に関するアラートは消したのち情報を取得する
             if "１００件" in error_message:
                 self.driver.switch_to.parent_frame()
+                time.sleep(self.sleep_time)
 
-                return "over"
+                # parts_code_listを分割して再度検索
+                split_count = 2
+                while True:
+                    parts_code_list_list = self.split_parts_code(parts_code_list, split_count)
+
+                    result_parts_list_list = []
+                    for parts_code_list in parts_code_list_list:
+                        result_parts_list = self.search_parts(parts_code_list, read_tokki)
+                        if result_parts_list == "over":
+                            split_count += 1
+                            break
+                        result_parts_list_list.append(result_parts_list)
+                    else:
+                        return self.concat_dict(result_parts_list_list)
             else:
                 raise e
 
+# 時間外のエラー
 class TimeOverError():
+    pass
+
+# 単一部品で100件以上の結果が出る場合のエラー
+class PartsResultOverError():
     pass
