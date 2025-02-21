@@ -341,8 +341,8 @@ class new_suzuki_scraping:
         self.driver.find_element(By.ID, "btn_all_delete").click()
         time.sleep(self.sleep_time)
 
-        if "全て削除" in self.get_alert_message():
-            self.close_alert()
+        aleart_message = self.close_alert()
+        if "全て削除" in aleart_message:
             time.sleep(self.sleep_time)
         else:
             raise Exception("Unknown Aleart Message")
@@ -354,16 +354,16 @@ class new_suzuki_scraping:
 
         return error_message
 
-    # アラートメッセージを取得
-    def get_alert_message(self):
-        alert = self.driver.switch_to.alert
-        alert_message = alert.text
-
-        return alert_message
-
     # アラートを消す
     def close_alert(self):
-        self.driver.switch_to.alert.accept()
+        try:
+            alert = self.driver.switch_to.alert
+            alert_message = alert.text
+            self.driver.switch_to.alert.accept()
+            
+            return alert_message
+        except:
+            return ""
 
     # 開かれているページの中で指定したページにハンドルを切り替える
     def change_handle(self, title):
@@ -416,13 +416,10 @@ class new_suzuki_scraping:
 
             for _ in range(10):
                 # アラート画面を消す
-                try:
-                    self.close_alert()
-                except:
-                    pass
+                alert_message = self.close_alert()
                 
                 # 特装車に関するアラートは消したのち情報を取得する
-                if "特装車" in error_message:
+                if "特装車" in alert_message:
                     self.driver.switch_to.parent_frame()
                     time.sleep(self.sleep_time)
                     
@@ -475,13 +472,10 @@ class new_suzuki_scraping:
 
             for _ in range(10):
                 # アラート画面を消す
-                try:
-                    self.close_alert()
-                except:
-                    pass
+                alert_message = self.close_alert()
                 
                 # 特装車に関するアラートは消したのち情報を取得する
-                if "特装車" in error_message:
+                if "特装車" in alert_message:
                     self.driver.switch_to.parent_frame()
                     time.sleep(self.sleep_time)
                     
@@ -530,13 +524,10 @@ class new_suzuki_scraping:
             error_message = self.get_error_message()
 
             # アラート画面を消す
-            try:
-                self.close_alert()
-            except:
-                pass
+            alert_message = self.close_alert()
             
             # 特装車に関するアラートは消したのち情報を取得する
-            if "特装車" in error_message:
+            if "特装車" in alert_message:
                 self.driver.switch_to.parent_frame()
                 time.sleep(self.sleep_time)
                 
@@ -578,27 +569,22 @@ class new_suzuki_scraping:
         except Exception as e:
             error_message = self.get_error_message()
             # アラート画面を消す
-            try:
-                self.close_alert()
-            except:
-                pass
+            alert_message = self.close_alert()
             
             # 特装車に関するアラートは消したのち情報を取得する
-            if "１００件" in error_message:
+            if "１００件" in alert_message:
                 self.driver.switch_to.parent_frame()
                 time.sleep(self.sleep_time)
 
                 # parts_code_listを分割して再度検索
                 split_count = 2
                 while True:
-                    print(split_count)
                     parts_code_list_list = self.split_parts_code(parts_code_list, split_count)
 
                     result_parts_list_list = []
                     for parts_code_list in parts_code_list_list:
                         result_parts_list = self.search_parts(parts_code_list, read_tokki)
                         if result_parts_list == "over":
-                            print("over")
                             split_count += 1
                             break
                         result_parts_list_list.append(result_parts_list)
