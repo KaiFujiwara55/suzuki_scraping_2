@@ -25,8 +25,11 @@ class new_suzuki_scraping:
 
     # ドライバーを閉じる
     def release_driver(self):
-        self.driver.quit()        
-        self.driver = None
+        try:
+            self.driver.quit()        
+            self.driver = None
+        except:
+            pass
 
     # 特定の画像を探す
     def is_exist_img(self, img_path):
@@ -357,12 +360,11 @@ class new_suzuki_scraping:
     # アラートを消す
     def close_alert(self):
         try:
-            alert = self.driver.switch_to.alert
-            alert_message = alert.text
+            alert_message = self.driver.switch_to.alert.text
             self.driver.switch_to.alert.accept()
             
             return alert_message
-        except:
+        except Exception as e:
             return ""
 
     # 開かれているページの中で指定したページにハンドルを切り替える
@@ -527,7 +529,7 @@ class new_suzuki_scraping:
             alert_message = self.close_alert()
             
             # 特装車に関するアラートは消したのち情報を取得する
-            if "特装車" in alert_message:
+            if "特装車" in error_message:
                 self.driver.switch_to.parent_frame()
                 time.sleep(self.sleep_time)
                 
@@ -572,7 +574,7 @@ class new_suzuki_scraping:
             alert_message = self.close_alert()
             
             # 特装車に関するアラートは消したのち情報を取得する
-            if "１００件" in alert_message:
+            if "１００件" in error_message:
                 self.driver.switch_to.parent_frame()
                 time.sleep(self.sleep_time)
 
@@ -583,10 +585,8 @@ class new_suzuki_scraping:
 
                     result_parts_list_list = []
                     for parts_code_list in parts_code_list_list:
+                        print(parts_code_list)
                         result_parts_list = self.search_parts(parts_code_list, read_tokki)
-                        if result_parts_list == "over":
-                            split_count += 1
-                            break
                         result_parts_list_list.append(result_parts_list)
                     else:
                         return self.concat_dict(result_parts_list_list)
