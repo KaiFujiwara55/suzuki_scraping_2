@@ -514,7 +514,7 @@ class new_suzuki_scraping:
                         self.click_car_list_next_btn()
                         break
                 else:
-                    raise Exception("該当する車種が見つかりませんでした")
+                    raise NoCarinfoError()
 
             if self.change_handle("SUZUKI_SIOS005 型式類別車種選択"):
                 self.click_auxiliary_num_list_no_select_btn()
@@ -595,6 +595,10 @@ class new_suzuki_scraping:
 
 # 時間外のエラー
 class TimeOverError():
+    pass
+
+# 該当車種がないエラー
+class NoCarinfoError():
     pass
 
 # 単一部品で100件以上の結果が出る場合のエラー

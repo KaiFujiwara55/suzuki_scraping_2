@@ -44,7 +44,7 @@ while True:
 
         for idx, target_row in target_df.iterrows():
             is_scraping = target_row["is_scraping"]
-            if is_scraping == "True":
+            if is_scraping == "True" or is_scraping == "NoCarinfo":
                 continue
 
             car_model_designation_no = no_data_handling(target_row["car_model_designation_no"])
@@ -91,6 +91,9 @@ while True:
 
                 target_df.loc[idx, "is_scraping"] = "Over"
                 target_df.to_csv(os.environ.get("TARGET_DATA_PATH"), index=False)
+    except search.NoCarinfoError:
+        target_df.loc[idx, "is_scraping"] = "NoCarinfo"
+        target_df.to_csv(os.environ.get("TARGET_DATA_PATH"), index=False)
     except Exception as e:
         print(e)
     except KeyboardInterrupt:
