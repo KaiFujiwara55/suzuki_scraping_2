@@ -583,6 +583,10 @@ class new_suzuki_scraping:
                 # 部品が残っている場合があるため、削除をかける
                 self.click_result_clear_btn()
 
+                # 部品コード一つで検索結果が100件超える場合はエラーとする
+                if " " not in parts_code_list:
+                    raise PartsResultOverError(Exception)
+                
                 # parts_code_listを分割して再度検索
                 parts_code_list_list = self.split_parts_code(parts_code_list, split_count=2)
 
