@@ -512,13 +512,16 @@ class new_suzuki_scraping:
             
             if self.change_handle("SUZUKI_SIOS004 収録車種一覧（２）"):
                 car_data_list = self.get_record_car_data_list()
-                for idx in range(len(car_data_list.values())):
+                for idx in range(len(car_data_list["車名"])):
                     if (car_data_list["車名"][idx] == car_name and car_data_list["型式"][idx] == car_model_name and car_data_list["様式"][idx] == youshiki and car_data_list["始号機"][idx] == vin_start and car_data_list["終号機"][idx] == vin_end and car_data_list["開始年月"][idx] == model_from and car_data_list["終了年月"][idx] == model_to and car_data_list["カタログ機種"][idx] == catalog_name):
                         self.click_car_list_row(idx)
                         self.click_car_list_next_btn()
                         break
                 else:
-                    raise NoCarinfoError("該当車種がありません")
+                    if (car_name == "" and car_model_name == "" and youshiki == "" and vin_start == "" and vin_end == "" and model_from == "" and model_to == "" and catalog_name == ""):
+                        self.click_car_list_next_btn()
+                    else:
+                        raise NoCarinfoError("該当車種がありません")
 
             if self.change_handle("SUZUKI_SIOS005 型式類別車種選択"):
                 self.click_auxiliary_num_list_no_select_btn()
@@ -526,6 +529,7 @@ class new_suzuki_scraping:
                 self.change_handle("SUZUKI_SIOS010 メイン")
         except Exception as e:
             error_message = self.get_error_message()
+            print(error_message)
 
             # アラート画面を消す
             alert_message = self.close_alert()
