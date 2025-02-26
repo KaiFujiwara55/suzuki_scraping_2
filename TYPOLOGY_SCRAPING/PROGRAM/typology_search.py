@@ -6,6 +6,7 @@ from dotenv import load_dotenv
 load_dotenv(__file__.replace("typology_search.py", ".env"))
 sys.path.append(os.environ.get("SCRAPING_PROGRAM_PATH"))
 import search
+import traceback
 
 def split_parts_code(parts_code, split_num):
     tmp_list = parts_code.split(" ")
@@ -44,7 +45,7 @@ while True:
 
         for idx, target_row in target_df.iterrows():
             is_scraping = target_row["is_scraping"]
-            if is_scraping == "True" or is_scraping == "NoCarinfo" or is_scraping == "PartsResultOver":
+            if is_scraping == "True":
                 continue
 
             car_model_designation_no = no_data_handling(target_row["car_model_designation_no"])
@@ -98,7 +99,9 @@ while True:
         target_df.loc[idx, "is_scraping"] = "PartsResultOver"
         target_df.to_csv(os.environ.get("TARGET_DATA_PATH"), index=False)
     except Exception as e:
-        print(e)
+        etype, value, tb = sys.exc_info()
+        error_message = "".join(traceback.format_exception(etype, value, tb))
+        print(error_message)
     except KeyboardInterrupt:
         break
     except search.TimeOverError:

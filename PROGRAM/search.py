@@ -560,8 +560,15 @@ class new_suzuki_scraping:
     # 同一keyを持つ辞書を結合する
     def concat_dict(self, dict_list):
         result_dict = {}
-        for key in dict_list[0].keys():
+        key_list = []
+        for dict in dict_list:
+            key_list += dict.keys()
+        key_list = list(set(key_list))
+        for key in key_list:
             result_dict[key] = []
+            for dict in dict_list:
+                if key in dict.keys():
+                    result_dict[key] += dict[key]
 
         return result_dict
 
@@ -576,6 +583,8 @@ class new_suzuki_scraping:
             return result_parts_list
         except Exception as e:
             error_message = self.get_error_message()
+            if not "１００件" in error_message:
+                print(error_message)
             # アラート画面を消す
             alert_message = self.close_alert()
             
@@ -589,7 +598,9 @@ class new_suzuki_scraping:
 
                 # 部品コード一つで検索結果が100件超える場合はエラーとする
                 if " " not in parts_code_list:
-                    raise PartsResultOverError(Exception)
+                    # raise PartsResultOverError(Exception)
+                    print({})
+                    return {}
                 
                 # parts_code_listを分割して再度検索
                 parts_code_list_list = self.split_parts_code(parts_code_list, split_count=2)
@@ -599,6 +610,7 @@ class new_suzuki_scraping:
                     result_parts_list = self.search_parts(parts_code_list_2, read_tokki)
                     result_parts_list_list.append(result_parts_list)
                 else:
+                    print(self.concat_dict(result_parts_list_list))
                     return self.concat_dict(result_parts_list_list)
             else:
                 raise e
