@@ -60,7 +60,7 @@ while True:
             catalog_name = no_data_handling(target_row["catalog_name"])
             parts_code = no_data_handling(" ".join(list(set(target_row["parts_code"].split(" ")))))
 
-            new_suzuki_scraping.save_car_data(car_model_designation_no, classification_no, car_name)
+            new_suzuki_scraping.save_car_data(car_model_designation_no, classification_no)
             new_suzuki_scraping.pinpoint_typology_search(
                 car_model_designation_no=car_model_designation_no,
                 classification_no=classification_no,
