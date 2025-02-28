@@ -599,7 +599,8 @@ class new_suzuki_scraping:
                 # 部品コード一つで検索結果が100件超える場合はエラーとする
                 if " " not in parts_code_list:
                     # raise PartsResultOverError(Exception)
-                    print({})
+                    with open("OUTPUT/over_parts_code.txt", "a") as f:
+                        f.write(self.car_model_designation_no, self.classification_no, parts_code_list, "\n")
                     return {}
                 
                 # parts_code_listを分割して再度検索
@@ -610,10 +611,13 @@ class new_suzuki_scraping:
                     result_parts_list = self.search_parts(parts_code_list_2, read_tokki)
                     result_parts_list_list.append(result_parts_list)
                 else:
-                    print(self.concat_dict(result_parts_list_list))
                     return self.concat_dict(result_parts_list_list)
             else:
                 raise e
+    
+    def save_car_data(self, car_model_designation_no, classification_no):
+        self.car_model_designation_no = car_model_designation_no
+        self.classification_no = classification_no
 
 # 時間外のエラー
 class TimeOverError(Exception):
