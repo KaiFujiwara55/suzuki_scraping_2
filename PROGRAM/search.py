@@ -367,7 +367,7 @@ class new_suzuki_scraping:
         ok_btn.click()
         time.sleep(self.sleep_time)
 
-        self.driver.change_handle("SUZUKI_SIOS010 メイン")
+        self.change_handle("SUZUKI_SIOS010 メイン")
         time.sleep(self.sleep_time)
 
 
@@ -396,7 +396,6 @@ class new_suzuki_scraping:
         for current_handle in current_handles:
             self.driver.switch_to.window(current_handle)
             time.sleep(0.2)
-
             if self.driver.title == title:
                 return True
         
@@ -596,9 +595,13 @@ class new_suzuki_scraping:
         try:
             self.input_parts_num(parts_code_list)
             self.execute_add_parts()
-            if self.change_handle("SUZUKI_SIOS050 部品選択"):
-                self.select_parts()
-                self.click_parts_select_ok_btn()
+            while (True):
+                if self.change_handle("SUZUKI_SIOS050　部品番号選択"):
+                    self.select_parts()
+                    self.click_parts_select_ok_btn()
+                else:
+                    self.change_handle("SUZUKI_SIOS010 メイン")
+                    break
             result_parts_list = self.get_result_parts_list(read_tokki)
             self.click_result_clear_btn()
             
@@ -621,7 +624,7 @@ class new_suzuki_scraping:
                 # 部品コード一つで検索結果が100件超える場合はエラーとする
                 if " " not in parts_code_list:
                     # raise PartsResultOverError(Exception)
-                    with open("TYPOLOGY_SCRAPING\\OUTPUT\\over_parts_code.txt", "a") as f:
+                    with open("TYPOLOGY_SCRAPING\\OUTPUT\\over_parts_code_new_2.txt", "a") as f:
                         f.write(self.car_model_designation_no+" "+self.classification_no+" "+parts_code_list+"\n")
                     return {}
                 
@@ -634,6 +637,10 @@ class new_suzuki_scraping:
                     result_parts_list_list.append(result_parts_list)
                 else:
                     return self.concat_dict(result_parts_list_list)
+            elif "当該品番は登録されていません":
+                with open("TYPOLOGY_SCRAPING\\OUTPUT\\not_exist_part_code.txt", "a") as f:
+                    f.write(self.car_model_designation_no+" "+self.classification_no+" "+parts_code_list+"\n")
+                return {}
             else:
                 raise e
     
@@ -651,4 +658,8 @@ class NoCarinfoError(Exception):
 
 # 単一部品で100件以上の結果が出る場合のエラー
 class PartsResultOverError(Exception):
+    pass
+
+# 該当品番が存在しないエラー
+class NotExistPartCode(Exception):
     pass
