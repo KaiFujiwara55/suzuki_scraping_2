@@ -352,6 +352,25 @@ class new_suzuki_scraping:
         else:
             raise Exception("Unknown Aleart Message")
 
+    # 部品選択画面で品番選択
+    def select_parts(self, target_row_num="all"):
+        tables = self.driver.find_elements(By.TAG_NAME, "table")
+        select_table = tables[-1]
+        for idx, tbody in enumerate(select_table.find_elements(By.TAG_NAME, "tbody")):
+            if target_row_num == "all" or idx == target_row_num:
+                tbody.click()
+                time.sleep(self.sleep_time)
+
+    # 部品選択画面でOKボタンをクリック
+    def click_parts_select_ok_btn(self):
+        ok_btn = self.driver.find_element(By.ID, "btnOk")
+        ok_btn.click()
+        time.sleep(self.sleep_time)
+
+        self.driver.change_handle("SUZUKI_SIOS010 メイン")
+        time.sleep(self.sleep_time)
+
+
     # エラーメッセージを取得
     def get_error_message(self):
         etype, value, tb = sys.exc_info()
@@ -577,6 +596,9 @@ class new_suzuki_scraping:
         try:
             self.input_parts_num(parts_code_list)
             self.execute_add_parts()
+            if self.change_handle("SUZUKI_SIOS050 部品選択"):
+                self.select_parts()
+                self.click_parts_select_ok_btn()
             result_parts_list = self.get_result_parts_list(read_tokki)
             self.click_result_clear_btn()
             

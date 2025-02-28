@@ -1,0 +1,87 @@
+is_scraping,car_model_designation_no,classification_no,car_name,car_model_name,youshiki,vin_start,vin_end,model_from,model_to,catalog_name,parts_code
+False,10385,0208,660 ワゴン,JB23W,JB23W,100001,310000,199809,200112,JB23W,87302 87308 85101 85301 87301 87307 85107 87101 84704 87107 86401
+False,10385,0208,660 ワゴン,JB23W,JB23W,310001,400000,200112,200409,JB23W-4,87302 87308 85101 85180 85301 87307 95400 89101 87107 86401
+False,10385,0224,660 ワゴン,JB23W,JB23W,100001,310000,199809,200112,JB23W,87302 85101 85301 87301 87101 84704 86401
+False,10385,0224,660 ワゴン,JB23W,JB23W,310001,400000,200112,200409,JB23W-4,84701 87302 87308 85101 84702 85301 87307 87107 86401
+False,11405,0005,660キャリイ,DA63T,DA63T,100001,380000,200205,200507,DA63T-5,45201 45150 68002 41700 34100 95400 86401 68001 39101 55311 45202 46510 71713 45910 84702 55101 89101 84703 74150 35320 95200 84920 48500 35603 35604 74430 55102 43252 84701 35120 41602 85180 43210 37400 45110 41601
+False,12717,0010,660 ワゴン,JB23W,JB23W,730001,no_data,201407,no_data,JB23W-A,85101
+False,15132,0061,no_data,no_data,no_data,no_data,no_data,no_data,no_data,no_data,85106 84502 74120 83440 71711 68002 83402 87380 74140 71811 68501 68001 83510 84580 83410 83540 87180 84703 85105 84541 84546 74430 83401 84511 84570 85180 95411 84501 69100 89101
+False,15133,0042,EBD-DA64V,DA64V,DA64V,130001,240000,200512,200706,DA64V-2,85180 43200 39510 87380 87180 86401
+False,15703,0001,no_data,no_data,no_data,no_data,no_data,no_data,no_data,no_data,85106 74400 84730 71721 74120 83440 58260 71711 68002 83402 87380 68003 86401 57711 58280 71811 87305 68001 87306 55311 83510 84702 84740 43250 58270 45810 87101 39510 83410 55101 83540 48110 44101 44102 95310 83980 74150 85105 48150 74100 84541 95200 84546 55102 83401 84511 57300 43420 84531 43200 84701 68004 58600 44111 84901 84570 85180 43210 95411 57611 56110 69100 71741 89101 84536 71742
+False,16033,0001,no_data,no_data,no_data,no_data,no_data,no_data,no_data,no_data,36780 87307 85108 87108 87107
+False,16033,0004,no_data,no_data,no_data,no_data,no_data,no_data,no_data,no_data,85106 84701 87105 87305 85105 87106 87306 87308 85180 84702 87307 85107 85108 87108 87380 87180 87107 86401
+False,16033,0011,no_data,no_data,no_data,no_data,no_data,no_data,no_data,no_data,36780 84701 68501 87308 85180 87180 68701 87307 85108 87108 87380 48110 34100 87107
+False,16034,0607,no_data,no_data,no_data,no_data,no_data,no_data,no_data,no_data,84701 85107 84702
+False,16113,0001,2.4,TDA4W,TDA4W,100001,no_data,200803,no_data,TDA4W-3,84502 74120 58260 71711 68002 83402 83502 58300 71811 68001 84503 74150 85105 74100 57610 83401 57600 84901 87106 84501 56110 69100 89101 95410 15100
+False,16113,0003,2.4,TDA4W,TDA4W,100001,no_data,200803,no_data,TDA4W-3,87305 34101 56110 39510
+False,16173,0007,no_data,no_data,no_data,no_data,no_data,no_data,no_data,no_data,74400 85303 87307 83440 83402 83502 83501 86401 87308 84526 84702 85103 87101 83410 84910 74100 84541 84920 84546 83401 84511 84531 84701 95411 84521 85107 85108 84536
+False,16403,0001,セダン:K6A,HA25S,HA25S,700001,no_data,200909,no_data,HA25S,46860 74120 83402 34100 83430 68003 71811 46201 83510 83410 83540 55101 48110 95310 36780 74150 95200 55102 68004 83530 95411 41601
+False,16405,0003,セダン:K6A,HA25S,HA25S,700001,no_data,200909,no_data,HA25S,44101 34100 44102
+False,16649,0602,no_data,no_data,no_data,no_data,no_data,no_data,no_data,no_data,84701 89101 84702
+False,16650,0006,no_data,no_data,no_data,no_data,no_data,no_data,no_data,no_data,71811 84701 84502 85180 84702 71711 86401
+False,16661,0001,no_data,no_data,no_data,no_data,no_data,no_data,no_data,no_data,83940
+False,17511,0001,no_data,no_data,no_data,no_data,no_data,no_data,no_data,no_data,71811 84502 74100 85103 85107 89101 84503
+False,17511,0003,no_data,no_data,no_data,no_data,no_data,no_data,no_data,no_data,71811 84502 85104 87308 85107 39510
+False,17511,0609,no_data,no_data,no_data,no_data,no_data,no_data,no_data,no_data,84701 48510
+False,17676,0029,no_data,no_data,no_data,no_data,no_data,no_data,no_data,no_data,85108 85107
+False,17954,0005,no_data,no_data,no_data,no_data,no_data,no_data,no_data,no_data,84502 87301 87380 71711 83502 86401 83501 71811 83510 84702 85103 83540 95200 74100 84541 84546 83401 84701 95411 84501 85107
+False,17954,0008,no_data,no_data,no_data,no_data,no_data,no_data,no_data,no_data,85105 71713 39970 87301 39510 83940 71711 86401
+False,17954,0017,no_data,no_data,no_data,no_data,no_data,no_data,no_data,no_data,85106 71811 84701 85303 85180 84702 87380 87301 85107 85108 87101 71711 72111 84510 86401
+False,17954,0608,no_data,no_data,no_data,no_data,no_data,no_data,no_data,no_data,74100 85106 39510
+False,17954,0617,no_data,no_data,no_data,no_data,no_data,no_data,no_data,no_data,85106 84701 85108 84702
+False,17956,0003,no_data,no_data,no_data,no_data,no_data,no_data,no_data,no_data,85303 74120 83402 87380 68003 58300 57711 83410 55101 48110 87180 84503 45151 74150 95200 48500 41810 55102 87105 35670 68004 58600 84504 95411 57611 84501 85108 38720 41601
+False,17956,0005,no_data,no_data,no_data,no_data,no_data,no_data,no_data,no_data,71811 84701 36710 84730 85303 84740 41810 84702 85107 85108 38720
+False,18014,0005,HBD-DA17V,DA17V,DA17V,100001,800000,201501,no_data,DA17V,45150 84730 46510 84740 43402 83401 45110 34100 83402
+False,18014,0011,no_data,no_data,no_data,no_data,no_data,no_data,no_data,no_data,84920
+False,18014,0019,no_data,no_data,no_data,no_data,no_data,no_data,no_data,no_data,34100 34101
+False,18094,0001,no_data,no_data,no_data,no_data,no_data,no_data,no_data,no_data,58300 71811 84701 48150 84920 87308 84702 85107 87108 55102 39510 55101 84910 48110 57300 86401
+False,18094,0002,no_data,no_data,no_data,no_data,no_data,no_data,no_data,no_data,71811 84701 87308 84702 87108 39510 48110 86401
+False,18094,0012,no_data,no_data,no_data,no_data,no_data,no_data,no_data,no_data,84920 89101 84910
+False,18094,0014,no_data,no_data,no_data,no_data,no_data,no_data,no_data,no_data,58300 85180 71721 87180 57611 48510 39510 48110 57300
+False,18094,0017,no_data,no_data,no_data,no_data,no_data,no_data,no_data,no_data,58300 48110
+False,18094,0601,no_data,no_data,no_data,no_data,no_data,no_data,no_data,no_data,84701 84702 39510
+False,18094,0602,no_data,no_data,no_data,no_data,no_data,no_data,no_data,no_data,84701 84702 39510
+False,18096,0003,4V:エネナシ,MR31S,MR31S,110001,200000,201509,no_data,MR31S-2,34101 87308 85107 39510 87107 86401
+False,18096,0004,4V:エネナシ,MR31S,MR31S,110001,200000,201509,no_data,MR31S-2,39510
+False,18096,0006,no_data,no_data,no_data,no_data,no_data,no_data,no_data,no_data,48110 34101
+False,18096,0604,4V:ENE-N,MR31S,MR31S,100001,110000,201310,no_data,MR31S,85108 87108 87307 86401
+False,18096,0604,4V:エネナシ,MR31S,MR31S,110001,200000,201509,no_data,MR31S-2,84502 34101 87307 84510 86401 87305 87308 84702 39510 87107 84701 87105 85180 84521 84501 85107 85108 87108 71741
+False,18096,0606,no_data,no_data,no_data,no_data,no_data,no_data,no_data,no_data,34101
+False,18098,0602,ラパン,HE33S,HE33S,100001,no_data,201503,no_data,HE33S,71811 84701 41602 85180 84702 87380 87101 71711 33680 84510 86401
+False,18098,0602,ラパン,HE33S,HE33S,100003,no_data,201903,no_data,HE33S-2,71811 84701 84702 87101 87380
+False,18296,0001,no_data,no_data,no_data,no_data,no_data,no_data,no_data,no_data,74410 72140 85302 83502 84510 68003 83950 71811 68001 46500 84740 43250 45810 87101 84910 83940 44102 95310 85102 48150 74100 84541 95200 48500 83401 58600 95411 72112 69100 89101
+False,18296,0003,no_data,no_data,no_data,no_data,no_data,no_data,no_data,no_data,85102 87106 85101 85180 85301 85302 87380 87180 84510
+False,18296,0004,no_data,no_data,no_data,no_data,no_data,no_data,no_data,no_data,85302 71811 85102 85101 85180 85301 87380 83940 71711 87180
+False,18296,0601,no_data,no_data,no_data,no_data,no_data,no_data,no_data,no_data,85102 84730 41602 46510 41810 84740 85302 44101 89101 41601
+False,18296,0603,no_data,no_data,no_data,no_data,no_data,no_data,no_data,no_data,85102 85302
+False,18297,0001,no_data,no_data,no_data,no_data,no_data,no_data,no_data,no_data,74140 83980 74150 74100 85103 83401 89101 57300 84575
+False,18454,0002,no_data,no_data,no_data,no_data,no_data,no_data,no_data,no_data,71811 34102 36710 95200 74100 33990 95411 71711 38880
+False,18455,0602,no_data,no_data,no_data,no_data,no_data,no_data,no_data,no_data,34103 38880
+False,18457,0001,no_data,no_data,no_data,no_data,no_data,no_data,no_data,no_data,71721 85302 68002 34100 68003 68001 46500 45202 84710 43401 43250 87180 45151 74100 45111 48500 41810 55102 35670 35650 85180 71740 57611 69100 71741 89101
+False,18457,0002,no_data,no_data,no_data,no_data,no_data,no_data,no_data,no_data,85302 46500 39970 55402 43210 33990 71740 84710 85301 57611 37210 84720 69100 55401 48110 34100 71741 84510
+False,18457,0003,no_data,no_data,no_data,no_data,no_data,no_data,no_data,no_data,85102 71722 83900 41810 33990 43210 71740 85180 85301 87180 85302 48110 86401
+False,18457,0004,no_data,no_data,no_data,no_data,no_data,no_data,no_data,no_data,44101 34100 44102 38880
+False,18457,0005,no_data,no_data,no_data,no_data,no_data,no_data,no_data,no_data,34103 34100 33990
+False,18458,0601,no_data,no_data,no_data,no_data,no_data,no_data,no_data,no_data,34101 44111 85102 44106 46500 84730 84740 84710 55102 43402 84720 44101 89101 44105 38880
+False,18458,0602,no_data,no_data,no_data,no_data,no_data,no_data,no_data,no_data,34103 34101 84720 84710
+False,18460,0001,no_data,no_data,no_data,no_data,no_data,no_data,no_data,no_data,74150 35320 55120 55311 68001 74100 87106 55402 68701 35603 85103 83940 56110 83440 69100 38860 71741 95410
+False,18703,0003,no_data,no_data,no_data,no_data,no_data,no_data,no_data,no_data,57711 84920 87308 85180 85301 87307 57611 72110 85107 85108 84910 85302 87108 87107 86401
+False,18703,0603,no_data,no_data,no_data,no_data,no_data,no_data,no_data,no_data,48110 85108
+False,19041,0024,no_data,no_data,no_data,no_data,no_data,no_data,no_data,no_data,71811 87308 71740 85301 87307 85108 85107 87108 85302 71711 87107 86401
+False,19177,0003,no_data,no_data,no_data,no_data,no_data,no_data,no_data,no_data,85102 85101 85180 85301 85302 87380 87180
+False,19386,0004,no_data,no_data,no_data,no_data,no_data,no_data,no_data,no_data,85108 85107 85301 85302
+False,19386,0005,no_data,no_data,no_data,no_data,no_data,no_data,no_data,no_data,84710 84720
+False,19391,0000,トクソウ,MH85S,MH85S,100002,999999,201911,no_data,MH85S2T,58300 83980 68004 84502 84504 85303 71721 84710 83402 68002 84503
+False,19508,0001,no_data,no_data,no_data,no_data,no_data,no_data,no_data,no_data,74100 34100 95411 38880
+False,19509,0601,no_data,no_data,no_data,no_data,no_data,no_data,no_data,no_data,34100 38880
+False,19510,0002,no_data,no_data,no_data,no_data,no_data,no_data,no_data,no_data,85301 34100 33990 38880
+False,19510,0005,no_data,no_data,no_data,no_data,no_data,no_data,no_data,no_data,85301 33990
+False,19511,0602,no_data,no_data,no_data,no_data,no_data,no_data,no_data,no_data,85102 84730 84740 84710 84720 85302 34100 38880
+False,19512,0002,no_data,no_data,no_data,no_data,no_data,no_data,no_data,no_data,71811 85102 85101 85180 84710 33990 43210 71740 85301 87180 87380 84720 85302 71711 48110 34100
+False,19512,0005,no_data,no_data,no_data,no_data,no_data,no_data,no_data,no_data,45201 57711 41602 45202 48500 33990 84710 85101 85301 57611 84720 85302 87380 87180 41601
+False,19661,0001,no_data,no_data,no_data,no_data,no_data,no_data,no_data,no_data,71811 84701 84702 39510 71711
+False,19661,0002,no_data,no_data,no_data,no_data,no_data,no_data,no_data,no_data,87380 71811 84702 84701
+False,19661,0003,no_data,no_data,no_data,no_data,no_data,no_data,no_data,no_data,87380 84701 71722 84702
+False,19661,0601,no_data,no_data,no_data,no_data,no_data,no_data,no_data,no_data,84701 84702
+False,19661,0602,no_data,no_data,no_data,no_data,no_data,no_data,no_data,no_data,84701 84702
+False,19661,0603,no_data,no_data,no_data,no_data,no_data,no_data,no_data,no_data,84701 84702
